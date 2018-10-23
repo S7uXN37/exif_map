@@ -43,8 +43,12 @@ def getGPS(filename):
 
 images = []
 locations = []
-filenames = sorted(glob.glob('data_city/*.jpg'))
+filenames = sorted(glob.glob('data/*.jpg'))
 skipped = []
+
+if len(filenames) == 0:
+    raise Exception("No image files found! Place them in a folder called 'data'")
+
 for filename in filenames:
     im = Image.open(filename)
     gps = getGPS(filename)
