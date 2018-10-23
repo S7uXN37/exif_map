@@ -13,8 +13,10 @@ parser = argparse.ArgumentParser(description='Creates map showing images in \'da
 parser.add_argument('--coast', dest='draw_coast', action='store_const', const=True, default=False, help='Draw coastlines')
 parser.add_argument('--labels', dest='draw_labels', action='store_const', const=True, default=False, help='Draw labels for each image')
 parser.add_argument('--no-save', dest='save', action='store_const', const=False, default=True, help='Don\'t save the finished map')
+parser.add_argument('--images', dest='images', action='store_const', const=True, default=False, help='Show images when possible')
 args = parser.parse_args()
 
+DRAW_IMAGES = args.images
 DRAW_LABELS = args.draw_labels
 DRAW_COASTLINES = args.draw_coast
 SAVE_MAP = args.save
@@ -53,17 +55,36 @@ fig = plt.figure(figsize=(10, 6))
 proj = ccrs.Mercator() # central_longitude=avgY, latitude_true_scale=avgX)
 ax = plt.axes(projection=proj)
 
+print(G + "Done!" + W)
+
 if DRAW_COASTLINES:
 	ax.coastlines(resolution='10m', color='black', linewidth=1)
 
 y = [l[0] for l in locations]
 x = [l[1] for l in locations]
-plt.plot(x,y, '-o', transform=ccrs.Geodetic())
 
 # Draw labels
 if DRAW_LABELS:
-	for l in locations:
-		plt.text(l[1], l[0], filenames[locations.index(l)], transform=ccrs.Geodetic())
+	for l,f in zip(locations, filenames):
+		plt.text(l[1], l[0], f, transform=ccrs.Geodetic())
+
+if DRAW_IMAGES:
+	# get width of are to display in data coordinates
+	w = [proj.transform_point(l[0], l[1], ccrs.Geodetic())[1] for l in locations]
+	width_data = max(w) - min(w)
+	# estimate a should-be pixel width
+	width_px = 400.0
+	# calculate radius of images so they are approx. size_px wide
+	size_px = 30
+	delta = size_px / width_px * width_data / 2
+	# draw images
+	print(B + "Drawing images..." + W)
+	for i,l in zip(images, locations):
+		pos = proj.transform_point(l[1], l[0], ccrs.Geodetic())
+		plt.imshow(i, extent=[pos[0]-delta,pos[0]+delta,pos[1]-delta,pos[1]+delta], zorder=10)
+	print(G + "Done!" + W)
+
+plt.plot(x,y, '-o', transform=ccrs.Geodetic())
 
 # Get data size
 xmin, xmax, ymin, ymax = plt.axis()

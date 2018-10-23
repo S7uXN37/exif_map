@@ -17,7 +17,7 @@ def to_degrees(data):
     degrees = float(data.values[0].num) / float(data.values[0].den)
     minutes = float(data.values[1].num) / float(data.values[1].den)
     seconds = float(data.values[2].num) / float(data.values[2].den)
-    return d + (minutes + (seconds / 60.0) / 60.0)
+    return degrees + (minutes + (seconds / 60.0)) / 60.0
 
 def getGPS(filename):
     with open(filename, 'rb') as f:
@@ -51,6 +51,7 @@ if len(filenames) == 0:
 
 for filename in filenames:
     im = Image.open(filename)
+    im = im.resize((100,100), Image.ANTIALIAS)
     gps = getGPS(filename)
     if gps:
         images.append(im)
