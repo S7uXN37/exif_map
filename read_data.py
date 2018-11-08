@@ -9,6 +9,8 @@ import glob
 
 import exifread as ef
 
+import masking
+
 __author__ = "S7uXN37"
 __license__ = "MIT"
 __copyright__ = "Copyright 2018, Marc Himmelberger"
@@ -42,6 +44,7 @@ def getGPS(filename):
     raise Exception('File could not be read')
 
 images = []
+masked_images = []
 locations = []
 filenames = sorted(glob.glob('data/*.jpg'))
 skipped = []
@@ -55,6 +58,7 @@ for filename in filenames:
     gps = getGPS(filename)
     if gps:
         images.append(im)
+        masked_images.append(masking.circle(im))
         locations.append(gps)
     else:
         skipped.append(filename)
