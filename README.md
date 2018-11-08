@@ -1,3 +1,4 @@
+
 # exif_map
 Supply a folder of images with geo locations and this python script will put them on a map
 
@@ -22,6 +23,7 @@ And on the built-in modules:
 * matplotlib
 * glob
 * os
+* numpy
 
 ## Usage ##
 Just execute the script using:
