@@ -1,5 +1,13 @@
+'''
+Given an image in RGB or RGBA, functions in masking will return a masked RGBA image.
+'''
+
 import numpy
 from PIL import Image
+
+__author__ = "S7uXN37"
+__license__ = "MIT"
+__copyright__ = "Copyright 2018, Marc Himmelberger"
 
 def circle(img):
     w,h = img.size
