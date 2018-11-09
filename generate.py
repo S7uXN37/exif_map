@@ -12,14 +12,16 @@ import argparse
 parser = argparse.ArgumentParser(description='Creates map showing images in \'data/\'')
 parser.add_argument('--coast', dest='draw_coast', action='store_const', const=True, default=False, help='Draw coastlines')
 parser.add_argument('--labels', dest='draw_labels', action='store_const', const=True, default=False, help='Draw labels for each image')
-parser.add_argument('--no-save', dest='save', action='store_const', const=False, default=True, help='Don\'t save the finished map')
+parser.add_argument('--save', dest='save', action='store_const', const=True, default=False, help='Save the finished map; disables zoom')
 parser.add_argument('--images', dest='images', action='store_const', const=True, default=False, help='Show images when possible')
+parser.add_argument('--no-mask', dest='masking', action='store_const', const=False, default=True, help='Leave images rectangular')
 args = parser.parse_args()
 
 DRAW_IMAGES = args.images
 DRAW_LABELS = args.draw_labels
 DRAW_COASTLINES = args.draw_coast
 SAVE_MAP = args.save
+MASK_CIRCLE = args.masking
 
 # Console colors
 W = '\033[0m'  # white (normal)
@@ -33,7 +35,7 @@ GR = '\033[37m' # gray
 
 
 print(B + "Loading images..." + W)
-from read_data import images, locations, filenames
+from read_data import images, masked_images, locations, filenames
 print(G + "Done!" + W)
 
 from tyler_map import *
@@ -79,7 +81,7 @@ if DRAW_IMAGES:
 	delta = size_px / width_px * width_data / 2
 	# draw images
 	print(B + "Drawing images..." + W)
-	for i,l in zip(images, locations):
+	for i,l in zip(masked_images if MASK_CIRCLE else images, locations):
 		pos = proj.transform_point(l[1], l[0], ccrs.Geodetic())
 		plt.imshow(i, extent=[pos[0]-delta,pos[0]+delta,pos[1]-delta,pos[1]+delta], zorder=10)
 	print(G + "Done!" + W)

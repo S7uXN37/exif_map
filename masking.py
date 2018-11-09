@@ -13,7 +13,7 @@ def circle(img):
     w,h = img.size
     r = min(w,h)/2.0
     pix = numpy.array(img)
-    img_new = numpy.array((h,w,4))
+    img_new = numpy.empty((h,w,4),dtype='uint8')
     for y, row in enumerate(pix):
         for x, pixel in enumerate(row):
             for i, val in enumerate(pixel):
