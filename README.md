@@ -2,7 +2,7 @@
 # exif_map
 Supply a folder of images with geo locations and this python script will put them on a map
 
-Runs on Python3
+Runs on Python3 ([installation](https://realpython.com/installing-python/))
 
 ## Dependencies ##
 This script depends on the third-party modules:
